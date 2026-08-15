@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>presentin ok?</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: black;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+<canvas id="heart"></canvas>
+
+<script>
+    const canvas = document.getElementById("heart");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const scale = Math.min(
+        canvas.width / 40,
+        canvas.height / 35
+    );
+
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+
+    let i = 0;
+    let currentScale = 0;
+
+    function heartX(t, scale) {
+        return 16 * Math.pow(Math.sin(t), 3) * scale;
+    }
+
+    function heartY(t, scale) {
+        return (
+            13 * Math.cos(t)
+            - 5 * Math.cos(2 * t)
+            - 2 * Math.cos(3 * t)
+            - Math.cos(4 * t)
+        ) * scale;
+    }
+
+    function draw() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "#ffb6c1";
+        ctx.font = "bold 10px Poppins, Arial";
+        ctx.textAlign = "center";
+
+        const points = 120;
+
+        for (let j = 0; j < 8; j++) {
+
+            if (i >= points) break;
+
+            const angle = i * (Math.PI * 2) / points;
+
+            const x = heartX(angle, scale);
+            const y = heartY(angle, scale);
+
+            ctx.fillText(
+                "tiamo",
+                centerX + x,
+                centerY - y
+            );
+
+            i++;
+        }
+
+        if (i < points) {
+            requestAnimationFrame(draw);
+        } else {
+            setTimeout(() => {
+                i = 0;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                draw();
+            }, 1500);
+        }
+    }
+
+    draw();
+
+    window.addEventListener("resize", () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+</script>
+
+</body>
+</html>
